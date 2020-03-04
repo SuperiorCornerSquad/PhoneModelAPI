@@ -4,6 +4,7 @@ const url = require("url");
 const path = require("path");
 const util = require("util");
 const bodyParser = require("body-parser");
+const mysql = require("mysql");
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -21,4 +22,8 @@ app.use(bodyParser.json());
 
 app.listen(8081, "localhost", function () {
     console.log("http://localhost:8081");
+});
+
+app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname+"/index.html"));
 });
