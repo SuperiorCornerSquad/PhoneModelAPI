@@ -1,4 +1,4 @@
 # Default ignored files
 *.iml
 /workspace.xml
-.env
+*.env
