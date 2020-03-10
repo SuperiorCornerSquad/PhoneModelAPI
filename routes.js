@@ -21,6 +21,18 @@ router.use(bodyParser.json());
 router.get("/", (req, res) => {
 	res.sendFile(path.join(__dirname+"/index.html"));
 });
+router.get("/get", (req, res) => {
+	res.sendFile(path.join(__dirname+"/get.html"));
+});
+router.get("/post", (req, res) => {
+	res.sendFile(path.join(__dirname+"/post.html"));
+});
+router.get("/update", (req, res) => {
+	res.sendFile(path.join(__dirname+"/update.html"));
+});
+router.get("/delete", (req, res) => {
+	res.sendFile(path.join(__dirname+"/delete.html"));
+});
 
 router.get("/api/v1/manufacturers", (req, res) => {
 	(async () => {
@@ -32,15 +44,66 @@ router.get("/api/v1/manufacturers", (req, res) => {
 			}
 			res.json(json);
 		} catch(err) {
-			console.error("Database error: " + err);
+			console.error("Error: " + err);
 			res.sendStatus(500);
 		}
 	})();
 });
 
 router.get("/api/v1/manufacturers/:mfr", (req, res) => {
-	console.log(req.params.mfr);
-	// Object.keys(req.query).length === 0 && req.query.constructor === Object
+	let fieldsToColumns = {id:"Model_id", model:"Model_name", releaseDate:"Release_date", weight:"Weight_g",
+		displaySize:"Display_size_inch", resolution:"Resolution", cameraRes:"Camera", batteryCpty:"Battery_capacity",
+		os:"Operating_system", osVersion:"OS_version", category:"Category"};
+	let mfr = req.params.mfr;
+	let fields;
+	if(typeof req.query.fields !== 'undefined') fields = req.query.fields.split(",");
+	let afterDate = req.query.afterDate;
+	let beforeDate = req.query.beforeDate;
+	let minWeight = req.query.minWeight;
+	let maxWeight = req.query.maxWeight;
+	let minDisplaySize = req.query.minDisplaySize;
+	let maxDisplaySize = req.query.maxDisplaySize;
+	let minCameraRes = req.query.minCameraRes;
+	let maxCameraRes = req.query.maxCameraRes;
+	let minBatteryCpty = req.query.minBatteryCpty;
+	let maxBatteryCpty = req.query.maxBatteryCpty;
+	let minOsVersion = req.query.minOsVersion;
+	let maxOsVersion = req.query.maxOsVersion;
+
+	// if(typeof afterDate !== 'undefined')
+
+	async function createSqlQuery() {
+		try {
+			let sqlQuery = "SELECT ";
+			if (typeof fields === 'undefined') {
+				let validated = con.format(`* FROM ${mfr}`);
+				sqlQuery = sqlQuery.concat(validated);
+				return sqlQuery;
+			} else {
+				let sqlFields = [];
+				for (let i in fields) {
+					if(typeof fieldsToColumns[fields[i]] === 'undefined') {
+						throw `No field found with name '${fields[i]}'`;
+					}
+					sqlFields.push(fieldsToColumns[fields[i]]);
+				}
+				sqlQuery = sqlQuery.concat(sqlFields.join() + con.format(` FROM ${mfr}`)); // SELECT field,field,field FROM manufacturer;
+			}
+
+			/*
+			return sqlQuery;*/
+		} catch (err) {
+			console.error("Error: " + err);
+			res.status(500).send("Invalid query: "+err);
+		}
+	}
+
+
+	(async () => {
+		let sql = await createSqlQuery();
+		let result = await query(sql);
+		res.json(result);
+	})();
 });
 
 router.get("/api/v1/manufacturers/:mfr/:id", (req, res) => {
@@ -55,7 +118,7 @@ router.get("/api/v1/smartphones", (req, res) => {
 			const result = await query(sqlQuery);
 			return result;
 		} catch(err) {
-			console.error("Database error: " + err);
+			console.error("Error: " + err);
 			res.sendStatus(500);
 		}
 	}
@@ -72,7 +135,7 @@ router.get("/api/v1/smartphones", (req, res) => {
 			const result = await query(sqlQuery);
 			res.json(result);
 		} catch(err) {
-			console.error("Database error: " + err);
+			console.error("Error: " + err);
 			res.sendStatus(500);
 		}
 	}
@@ -91,7 +154,7 @@ router.get("/api/v1/phablets", (req, res) => {
 			const result = await query(sqlQuery);
 			return result;
 		} catch(err) {
-			console.error("Database error: " + err);
+			console.error("Error: " + err);
 			res.sendStatus(500);
 		}
 	}
@@ -108,7 +171,7 @@ router.get("/api/v1/phablets", (req, res) => {
 			const result = await query(sqlQuery);
 			res.json(result);
 		} catch(err) {
-			console.error("Database error: " + err);
+			console.error("Error: " + err);
 			res.sendStatus(500);
 		}
 	}
