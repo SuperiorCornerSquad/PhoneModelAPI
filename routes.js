@@ -51,47 +51,97 @@ router.get("/api/v1/manufacturers", (req, res) => {
 });
 
 router.get("/api/v1/manufacturers/:mfr", (req, res) => {
-	let fieldsToColumns = {id:"Model_id", model:"Model_name", releaseDate:"Release_date", weight:"Weight_g",
+	let fieldsToSqlColumns = {id:"Model_id", model:"Model_name", releaseDate:"Release_date", weight:"Weight_g",
 		displaySize:"Display_size_inch", resolution:"Resolution", cameraRes:"Camera", batteryCpty:"Battery_capacity",
 		os:"Operating_system", osVersion:"OS_version", category:"Category"};
 	let mfr = req.params.mfr;
 	let fields;
 	if(typeof req.query.fields !== 'undefined') fields = req.query.fields.split(",");
-	let afterDate = req.query.afterDate;
-	let beforeDate = req.query.beforeDate;
-	let minWeight = req.query.minWeight;
-	let maxWeight = req.query.maxWeight;
-	let minDisplaySize = req.query.minDisplaySize;
-	let maxDisplaySize = req.query.maxDisplaySize;
-	let minCameraRes = req.query.minCameraRes;
-	let maxCameraRes = req.query.maxCameraRes;
-	let minBatteryCpty = req.query.minBatteryCpty;
-	let maxBatteryCpty = req.query.maxBatteryCpty;
-	let minOsVersion = req.query.minOsVersion;
-	let maxOsVersion = req.query.maxOsVersion;
-
-	// if(typeof afterDate !== 'undefined')
+	let queries = {afterDate:req.query.afterDate, beforeDate:req.query.beforeDate, minWeight:req.query.minWeight,
+		maxWeight:req.query.maxWeight, minDisplaySize:req.query.minDisplaySize, maxDisplaySize:req.query.maxDisplaySize,
+		minCameraRes:req.query.minCameraRes, maxCameraRes:req.query.maxCameraRes, minBatteryCpty:req.query.minBatteryCpty,
+		maxBatteryCpty:req.query.maxBatteryCpty, minOsVersion:req.query.minOsVersion, maxOsVersion:req.query.maxOsVersion};
+	function areQueriesUndefined() {
+		for (let key in queries) {
+			if (typeof queries[key] !== 'undefined')
+				return false;
+		}
+		return true;
+	}
 
 	async function createSqlQuery() {
 		try {
 			let sqlQuery = "SELECT ";
-			if (typeof fields === 'undefined') {
-				let validated = con.format(`* FROM ${mfr}`);
+			if (typeof fields === 'undefined') { // Katsotaan jos fields valueita on. Jos ei SELECT FROM *;
+				let validated = con.format("* FROM ??", mfr);
 				sqlQuery = sqlQuery.concat(validated);
-				return sqlQuery;
+				// return sqlQuery;
 			} else {
 				let sqlFields = [];
 				for (let i in fields) {
-					if(typeof fieldsToColumns[fields[i]] === 'undefined') {
-						throw `No field found with name '${fields[i]}'`;
-					}
-					sqlFields.push(fieldsToColumns[fields[i]]);
+					if(typeof fieldsToSqlColumns[fields[i]] === 'undefined') throw `No field found with name '${fields[i]}'`;
+					sqlFields.push(fieldsToSqlColumns[fields[i]]);
 				}
-				sqlQuery = sqlQuery.concat(sqlFields.join() + con.format(` FROM ${mfr}`)); // SELECT field,field,field FROM manufacturer;
+				sqlQuery = sqlQuery.concat(sqlFields.join() + con.format(" FROM ??", mfr)); // SELECT field,field,field FROM manufacturer;
 			}
 
-			/*
-			return sqlQuery;*/
+			let amountOfQueries = Object.keys(req.query).length;
+			if(amountOfQueries === 1 && typeof fields !== 'undefined' || areQueriesUndefined()) { // ei ole muita kuin fields query tai ei ole queryjä ollenkaan.
+				console.log(sqlQuery);
+				return sqlQuery;
+			} else {
+				// Jos kaikki queryt undefined niin ei tänne
+				sqlQuery = sqlQuery.concat(" WHERE ");
+				for(let key in queries) {
+					if(typeof queries[key] !== 'undefined') {
+						switch (key) {
+							case "afterDate":
+								sqlQuery = sqlQuery.concat(con.format("Release_date >= ?", queries[key]));
+								break;
+							case "beforeDate":
+								sqlQuery = sqlQuery.concat(con.format("Release_date <= ?", queries[key]));
+								break;
+							case "minWeight":
+								sqlQuery = sqlQuery.concat(con.format("Weight_g >= ?", queries[key]));
+								break;
+							case "maxWeight":
+								sqlQuery = sqlQuery.concat(con.format("Weight_g <= ?", queries[key]));
+								break;
+							case "minDisplaySize":
+								sqlQuery = sqlQuery.concat(con.format("Display_size_inch >= ?", queries[key]));
+								break;
+							case "maxDisplaySize":
+								sqlQuery = sqlQuery.concat(con.format("Display_size_inch <= ?", queries[key]));
+								break;
+							case "minCameraRes":
+								sqlQuery = sqlQuery.concat(con.format("Camera >= ?", queries[key]));
+								break;
+							case "maxCameraRes":
+								sqlQuery = sqlQuery.concat(con.format("Camera <= ?", queries[key]));
+								break;
+							case "minBatteryCpty":
+								sqlQuery = sqlQuery.concat(con.format("Battery_capacity >= ?", queries[key]));
+								break;
+							case "maxBatteryCpty":
+								sqlQuery = sqlQuery.concat(con.format("Battery_capacity <= ?", queries[key]));
+								break;
+							case "minOsVersion":
+								sqlQuery = sqlQuery.concat(con.format("OS_version >= ?", queries[key]));
+								break;
+							case "maxOsVersion":
+								sqlQuery = sqlQuery.concat(con.format("OS_version <= ?", queries[key]));
+								break;
+							default:
+								throw "Something went extremely wrong!";
+						}
+						sqlQuery = sqlQuery.concat(" AND ");
+					}
+				}
+				sqlQuery = sqlQuery.slice(0, -5);
+				console.log(sqlQuery);
+				return sqlQuery;
+			}
+
 		} catch (err) {
 			console.error("Error: " + err);
 			res.status(500).send("Invalid query: "+err);
@@ -107,7 +157,7 @@ router.get("/api/v1/manufacturers/:mfr", (req, res) => {
 });
 
 router.get("/api/v1/manufacturers/:mfr/:id", (req, res) => {
-
+	//TODO Tämä vielä
 });
 
 router.get("/api/v1/smartphones", (req, res) => {
