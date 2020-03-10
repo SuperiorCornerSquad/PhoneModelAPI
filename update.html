@@ -29,12 +29,41 @@
 <div class="container-fluid">
 
     <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
-    <div class="col-sm-2" style="background-color:lavender;">
 
-    </div>
+    <div class="col-sm-12" style="background-color:lavenderblush;">
+        <div class="col-sm-3">
+            <label for="mfr">Manufacturer</label>
+        </div>
+        <div class="col-sm-7">
+            <input type="text" id="mfr" name="big_form" onfocusout="addManufacturerToUrl()">
+        </div>
+        <form action="/api/v1/manufacturers/" method="post" target="hiddenFrame" id="postForm">
+            <div class="col-sm-3">
+                <label for="model_id">Model id</label> <br>
+                <label for="model_name">Model name</label> <br>
+                <label for="release_date">Release date</label><br>
+                <label for="weight_g">Weight</label><br>
+                <label for="display_size_inch">Display size in inches</label><br>
+                <label for="resolution">Resolution</label><br>
+                <label for="camera">Camera</label><br>
+                <label for="battery_capacity">Battery Capacity</label><br>
+                <label for="os_version">OS Version</label><br>
+                <label for="category">Category</label><br>
 
-    <div class="col-sm-10" style="background-color:lavenderblush;">
-
+            </div>
+            <div class="col-sm-7">
+                <input type="text" id="model_id" name="big_form"><br>
+                <input type="text" id="model_name" name="big_form"><br>
+                <input type="text" id="release_date" name="big_form"><br>
+                <input type="text" id="weight_g" name="big_form"><br>
+                <input type="text" id="display_size_inch" name="big_form"><br>
+                <input type="text" id="resolution" name="big_form"><br>
+                <input type="text" id="camera" name="big_form"><br>
+                <input type="text" id="battery_capacity" name="big_form"><br>
+                <input type="text" id="os_version" name="big_form"><br>
+                <input type="text" id="category" name="big_form"><br>
+            </div>
+        </form>
     </div>
 
 </div>
