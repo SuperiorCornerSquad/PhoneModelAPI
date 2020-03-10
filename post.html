@@ -38,15 +38,16 @@
     </div>
 
     <div class="col-sm-10" style="background-color:lavenderblush;">
+
         <div class="col-sm-3">
             <label for="mfr">Manufacturer</label>
         </div>
         <div class="col-sm-7">
             <input type="text" id="mfr" name="big_form" onfocusout="addManufacturerToUrl()">
         </div>
+
         <form action="/api/v1/manufacturers/" method="post" target="hiddenFrame" id="postForm">
             <div class="col-sm-3">
-                <label for="model_id">Model id</label> <br>
                 <label for="model_name">Model name</label> <br>
                 <label for="release_date">Release date</label><br>
                 <label for="weight_g">Weight</label><br>
@@ -59,16 +60,16 @@
 
             </div>
             <div class="col-sm-7">
-                <input type="text" id="model_id" name="big_form"><br>
-                <input type="text" id="model_name" name="big_form"><br>
-                <input type="text" id="release_date" name="big_form"><br>
-                <input type="text" id="weight_g" name="big_form"><br>
-                <input type="text" id="display_size_inch" name="big_form"><br>
-                <input type="text" id="resolution" name="big_form"><br>
-                <input type="text" id="camera" name="big_form"><br>
-                <input type="text" id="battery_capacity" name="big_form"><br>
-                <input type="text" id="os_version" name="big_form"><br>
-                <input type="text" id="category" name="big_form"><br>
+                <input type="text" id="model_name" name="model_name"><br>
+                <input type="date" id="release_date" name="release_date"><br>
+                <input type="text" id="weight_g" name="weight_g"><br>
+                <input type="text" id="display_size_inch" name="display_size_inch"><br>
+                <input type="text" id="resolution" name="resolution"><br>
+                <input type="text" id="camera" name="camera"><br>
+                <input type="text" id="battery_capacity" name="battery_capacity"><br>
+                <input type="text" id="os_version" name="os_version"><br>
+                <input type="text" id="category" name="category"><br>
+                <input type="submit" value="Submit">
             </div>
         </form>
     </div>
