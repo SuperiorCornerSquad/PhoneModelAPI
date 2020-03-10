@@ -76,7 +76,7 @@ router.post("/api/v1/manufacturers/:mfr", (req, res) => {
     async function insertDataIntoDatabase() {
         try {
             const sql = "INSERT INTO ?? (Model_name, Release_date, Weight_g, Display_size_inch, Resolution, Camera, Battery_capacity, Operating_system, OS_version, Category) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            await query(sql, [manufacturer, json.Model_name, json.Release_date, json.Weight_g, json.Display_size_inch, json.Resolution, json.Camera, json.Battery_capacity, json.Operating_system, json.OS_version, json.Category]);
+            await query(sql, [manufacturer, json.model_name, json.release_date, json.weight_g, json.display_size_inch, json.resolution, json.camera, json.battery_capacity, json.operating_system, json.os_version, json.category]);
             res.sendStatus(200);
         }catch(err){
             console.error(err);

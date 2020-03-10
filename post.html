@@ -19,10 +19,10 @@
         </div>
         <ul class="nav navbar-nav">
             <li class="active"><a href="http://localhost:8081/">Home</a></li>
-            <li><a href="http://localhost:8081/get.html">Get</a></li>
+            <li><a href="http://localhost:8081/get">Get</a></li>
             <li><a href="#">Post</a></li>
-            <li><a href="http://localhost:8081/update.html">Update</a></li>
-            <li><a href="http://localhost:8081/delete.html">Delete</a></li>
+            <li><a href="http://localhost:8081/update">Update</a></li>
+            <li><a href="http://localhost:8081/delete">Delete</a></li>
         </ul>
     </div>
 </nav>
@@ -38,31 +38,50 @@
     </div>
 
     <div class="col-sm-10" style="background-color:lavenderblush;">
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Manufacturer</th>
-                <th>Model Id</th>
-                <th>Model name</th>
-                <th>Release date</th>
-                <th>Weight (gram)</th>
-                <th>Display size in inches</th>
-                <th>Resolution</th>
-                <th>Camera</th>
-                <th>Battery capacity</th>
-                <th>Operating system</th>
-                <th>OS version</th>
-                <th>Category</th>
-            </tr>
-            </thead>
-        </table>
+
+        <div class="col-sm-3">
+            <label for="mfr">Manufacturer</label>
+        </div>
+        <div class="col-sm-7">
+            <input type="text" id="mfr" name="big_form" onfocusout="addManufacturerToUrl()">
+        </div>
+
+        <form action="/api/v1/manufacturers/" method="post" target="hiddenFrame" id="postForm">
+            <div class="col-sm-3">
+                <label for="model_name">Model name</label> <br>
+                <label for="release_date">Release date</label><br>
+                <label for="weight_g">Weight</label><br>
+                <label for="display_size_inch">Display size in inches</label><br>
+                <label for="resolution">Resolution</label><br>
+                <label for="camera">Camera</label><br>
+                <label for="battery_capacity">Battery capacity</label><br>
+                <label for="operating_system">Operating system</label><br>
+                <label for="os_version">OS Version</label><br>
+                <label for="category">Category</label><br>
+
+            </div>
+            <div class="col-sm-7">
+                <input type="text" id="model_name" name="model_name"><br>
+                <input type="date" id="release_date" name="release_date"><br>
+                <input type="text" id="weight_g" name="weight_g"><br>
+                <input type="text" id="display_size_inch" name="display_size_inch"><br>
+                <input type="text" id="resolution" name="resolution"><br>
+                <input type="text" id="camera" name="camera"><br>
+                <input type="text" id="battery_capacity" name="battery_capacity"><br>
+                <input type="text" id="operating_system" name="operating_system"><br>
+                <input type="text" id="os_version" name="os_version"><br>
+                <input type="text" id="category" name="category"><br>
+                <input type="submit" value="Submit">
+            </div>
+        </form>
     </div>
 
 </div>
 
-</div>
-
-
-
 </body>
+<script>
+    function addManufacturerToUrl() {
+        document.getElementById('postForm').setAttribute ("action" , "/api/v1/manufacturers/" + document.getElementById('mfr').value);
+    }
+</script>
 </html>
