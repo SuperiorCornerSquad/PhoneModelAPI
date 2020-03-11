@@ -190,7 +190,9 @@ router.delete("/api/v1/manufacturers", async (req, res) => {
         }
     })();
 });
-
+/**
+ * Deletes a phone model (:id) form a manufacturer (:mfr)
+ */
 router.delete("/api/v1/manufacturers/:mfr/:id", async (req, res) => {
     let manufacturer = req.params.mfr;
     let phoneID = req.params.id;
