@@ -10,6 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="client_post.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -30,15 +31,22 @@
 
     <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
 
+    <div class="col-sm-12" style="background-color:lavender;">
+        <label>Get call</label>
+        <input type="text" id="getCall" name="getCall" placeholder="e.g. samsung/1">
+        <input type="button" id="getCallBtn" value="GET" onclick="getCall()">
+        <input type="button" id="updateBtn" value="UPDATE" onclick="updateProduce()">
+    </div>
+
     <div class="col-sm-12" style="background-color:lavenderblush;">
         <div class="col-sm-3">
-            <label for="mfr">Manufacturer</label>
+
         </div>
         <div class="col-sm-7">
-            <input type="text" id="mfr" name="big_form" onfocusout="addManufacturerToUrl()">
         </div>
         <form action="/api/v1/manufacturers/" method="post" target="hiddenFrame" id="postForm">
             <div class="col-sm-3">
+                <label for="mfr">Manufacturer</label> <br>
                 <label for="model_id">Model id</label> <br>
                 <label for="model_name">Model name</label> <br>
                 <label for="release_date">Release date</label><br>
@@ -47,23 +55,24 @@
                 <label for="resolution">Resolution</label><br>
                 <label for="camera">Camera</label><br>
                 <label for="battery_capacity">Battery Capacity</label><br>
-                <label for="operating_system">Operating System</label>
+                <label for="operating_system">Operating System</label><br>
                 <label for="os_version">OS Version</label><br>
                 <label for="category">Category</label><br>
 
             </div>
-            <div class="col-sm-7">
-                <input type="text" id="model_id" name="model_id"><br>
-                <input type="text" id="model_name" name="model_name"><br>
-                <input type="text" id="release_date" name="release_date"><br>
-                <input type="text" id="weight_g" name="weight_g"><br>
-                <input type="text" id="display_size_inch" name="display_size_inch"><br>
-                <input type="text" id="resolution" name="resolution"><br>
-                <input type="text" id="camera" name="camera"><br>
-                <input type="text" id="battery_capacity" name="battery_capacity"><br>
-                <input type="text" id="operating_system" name="operating_system"><br>
-                <input type="text" id="os_version" name="os_version"><br>
-                <input type="text" id="category" name="category"><br>
+            <div class="col-sm-7" id="textFields">
+                <input type="text" id="mfr" name="mfr" disabled value=""><br>
+                <input type="text" id="model_id" name="model_id" disabled value=""><br>
+                <input type="text" id="model_name" name="model_name" value=""><br>
+                <input type="text" id="release_date" name="release_date" value=""><br>
+                <input type="text" id="weight_g" name="weight_g" value=""><br>
+                <input type="text" id="display_size_inch" name="display_size_inch" value=""><br>
+                <input type="text" id="resolution" name="resolution" value=""><br>
+                <input type="text" id="camera" name="camera" value=""><br>
+                <input type="text" id="battery_capacity" name="battery_capacity" value=""><br>
+                <input type="text" id="operating_system" name="operating_system" value=""><br>
+                <input type="text" id="os_version" name="os_version" value=""><br>
+                <input type="text" id="category" name="category" value=""><br>
             </div>
         </form>
     </div>
@@ -72,7 +81,39 @@
 
 </div>
 
+<script>
+    function getCall() {
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                let json = JSON.parse(xmlhttp.responseText);
+                if (json.length > 0){ // something found
+                    console.table(json);
+                    json = Object.values(json[0]);
+                    console.log(json);
+                    addTextToFields(json);
+                }
+                else {
+                    alert('No phone found')
+                }
+            }
+        };
+        xmlhttp.open("GET", "/api/v1/manufacturers/" + document.getElementById('getCall').value ,true);
+        xmlhttp.send();
+    }
+    function addTextToFields(json) {
+        let x = document.getElementById('textFields').children;
+        let mfr = document.getElementById('getCall').value.split('/')[0];
+        x[0].value = mfr;
+        let j = 0;
+        for (let i = 2; i < x.length; i+=2) {
+            x[i].value = json[j];
+            j++;
+        }
+    }
 
+
+</script>
 
 </body>
 </html>
