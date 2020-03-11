@@ -175,7 +175,7 @@ router.get("/api/v1/manufacturers/:mfr/:id", (req, res) => {
 	let fieldsToSqlColumns = {id:"Model_id", model:"Model_name", releaseDate:"Release_date", weight:"Weight_g",
 		displaySize:"Display_size_inch", resolution:"Resolution", cameraRes:"Camera", batteryCpty:"Battery_capacity",
 		os:"Operating_system", osVersion:"OS_version", category:"Category"};
-	let mfr = req.params.mfr;
+	let mfr = req.params.mfr.toLowerCase();
 	let id = req.params.id;
 	let fields;
 	if(typeof req.query.fields !== 'undefined') fields = req.query.fields.split(",");
