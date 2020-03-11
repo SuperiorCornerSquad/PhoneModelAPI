@@ -61,6 +61,7 @@ router.get("/api/v1/manufacturers/:mfr", (req, res) => {
 		maxWeight:req.query.maxWeight, minDisplaySize:req.query.minDisplaySize, maxDisplaySize:req.query.maxDisplaySize,
 		minCameraRes:req.query.minCameraRes, maxCameraRes:req.query.maxCameraRes, minBatteryCpty:req.query.minBatteryCpty,
 		maxBatteryCpty:req.query.maxBatteryCpty, minOsVersion:req.query.minOsVersion, maxOsVersion:req.query.maxOsVersion};
+
 	function areQueriesUndefined() {
 		for (let key in queries) {
 			if (typeof queries[key] !== 'undefined')
@@ -69,31 +70,45 @@ router.get("/api/v1/manufacturers/:mfr", (req, res) => {
 		return true;
 	}
 
-	async function createSqlQuery() {
+	async function getManufacturers() {
 		try {
+			let sqlQuery = "SELECT DISTINCT table_name FROM information_schema.columns WHERE column_name ='Category'";
+			const result = await query(sqlQuery);
+			return result;
+		} catch(err) {
+			console.error("Error: " + err);
+			res.sendStatus(500);
+		}
+	}
+
+	async function createSqlQuery(manufacturers) {
+		try {
+			let hasMfr = false;
+			for (let i=0; i<manufacturers.length; i++) { // Katsotaan onko mfr:ää olemassa
+				if(manufacturers[i].table_name === mfr) hasMfr = true;
+			}
+			if(!hasMfr) throw `'${mfr}' is not a valid route`;
 			let sqlQuery = "SELECT ";
 			if (typeof fields === 'undefined') { // Katsotaan jos fields valueita on. Jos ei SELECT FROM *;
 				let validated = con.format("* FROM ??", mfr);
 				sqlQuery = sqlQuery.concat(validated);
-				// return sqlQuery;
 			} else {
 				let sqlFields = [];
 				for (let i in fields) {
-					if(typeof fieldsToSqlColumns[fields[i]] === 'undefined') throw `No field found with name '${fields[i]}'`;
+					if(typeof fieldsToSqlColumns[fields[i]] === 'undefined') throw `'${fields[i]}' is not a possible value for fields`;
 					sqlFields.push(fieldsToSqlColumns[fields[i]]);
 				}
 				sqlQuery = sqlQuery.concat(sqlFields.join() + con.format(" FROM ??", mfr)); // SELECT field,field,field FROM manufacturer;
 			}
 
 			let amountOfQueries = Object.keys(req.query).length;
-			if(amountOfQueries === 1 && typeof fields !== 'undefined' || areQueriesUndefined()) { // ei ole muita kuin fields query tai ei ole queryjä ollenkaan.
+			if(amountOfQueries === 1 && typeof fields !== 'undefined' || areQueriesUndefined()) { // Katsotaan onko vain fields queryja tai jos queryja ei ole ollenkaan.
 				console.log(sqlQuery);
 				return sqlQuery;
-			} else {
-				// Jos kaikki queryt undefined niin ei tänne
+			} else {	// Jos kaikki queryt undefined niin ei tänne
 				sqlQuery = sqlQuery.concat(" WHERE ");
-				for(let key in queries) {
-					if(typeof queries[key] !== 'undefined') {
+				for(let key in queries) { // Käydään queryt läpi
+					if(typeof queries[key] !== 'undefined') { // Katsotaan onko querya olemassa
 						switch (key) {
 							case "afterDate":
 								sqlQuery = sqlQuery.concat(con.format("Release_date >= ?", queries[key]));
@@ -137,7 +152,7 @@ router.get("/api/v1/manufacturers/:mfr", (req, res) => {
 						sqlQuery = sqlQuery.concat(" AND ");
 					}
 				}
-				sqlQuery = sqlQuery.slice(0, -5);
+				sqlQuery = sqlQuery.slice(0, -5); // Poistetaam ylimääräinen " AND " lauseen lopusta.
 				console.log(sqlQuery);
 				return sqlQuery;
 			}
@@ -148,16 +163,74 @@ router.get("/api/v1/manufacturers/:mfr", (req, res) => {
 		}
 	}
 
-
 	(async () => {
-		let sql = await createSqlQuery();
+		let mfr = await  getManufacturers();
+		let sql = await createSqlQuery(mfr);
 		let result = await query(sql);
 		res.json(result);
 	})();
 });
 
 router.get("/api/v1/manufacturers/:mfr/:id", (req, res) => {
-	//TODO Tämä vielä
+	let fieldsToSqlColumns = {id:"Model_id", model:"Model_name", releaseDate:"Release_date", weight:"Weight_g",
+		displaySize:"Display_size_inch", resolution:"Resolution", cameraRes:"Camera", batteryCpty:"Battery_capacity",
+		os:"Operating_system", osVersion:"OS_version", category:"Category"};
+	let mfr = req.params.mfr;
+	let id = req.params.id;
+	let fields;
+	if(typeof req.query.fields !== 'undefined') fields = req.query.fields.split(",");
+
+	async function getManufacturers() {
+		try {
+			let sqlQuery = "SELECT DISTINCT table_name FROM information_schema.columns WHERE column_name ='Category'";
+			const result = await query(sqlQuery);
+			return result;
+		} catch(err) {
+			console.error("Error: " + err);
+			res.sendStatus(500);
+		}
+	}
+
+	async function createSqlQuery(manufacturers) {
+		try {
+			let hasMfr = false;
+			for (let i=0; i<manufacturers.length; i++) { // Katsotaan onko mfr:ää olemassa
+				if(manufacturers[i].table_name === mfr) hasMfr = true;
+			}
+			if(!hasMfr) throw `'${mfr}' is not a valid route`;
+			let sqlQuery = "SELECT ";
+			if (typeof fields === 'undefined') { // Katsotaan jos fields valueita on. Jos ei SELECT FROM *;
+				let validated = con.format("* FROM ??", mfr);
+				sqlQuery = sqlQuery.concat(validated);
+			} else {
+				let sqlFields = [];
+				for (let i in fields) {
+					if(typeof fieldsToSqlColumns[fields[i]] === 'undefined') throw `'${fields[i]}' is not a possible value for fields`;
+					sqlFields.push(fieldsToSqlColumns[fields[i]]);
+				}
+				sqlQuery = sqlQuery.concat(sqlFields.join() + con.format(" FROM ??", mfr)); // SELECT field,field,field FROM manufacturer;
+			}
+
+			sqlQuery = sqlQuery.concat(con.format(" WHERE Model_id = ?", id));
+			let amountOfQueries = Object.keys(req.query).length;
+			if(amountOfQueries === 1 && typeof fields !== 'undefined' || amountOfQueries === 0) { // Katsotaan onko vain fields queryja tai jos ei ole queryja ollenkaan.
+				console.log(sqlQuery);
+				return sqlQuery;
+			} else {
+				throw "Only 'fields' parameter is allowed!";
+			}
+		} catch (err) {
+			console.error("Error: " + err);
+			res.status(500).send("Invalid query: "+err);
+		}
+	}
+
+	(async () => {
+		let mfr = await getManufacturers();
+		let sql = await createSqlQuery(mfr);
+		let result = await query(sql);
+		res.json(result);
+	})();
 });
 
 router.get("/api/v1/smartphones", (req, res) => {

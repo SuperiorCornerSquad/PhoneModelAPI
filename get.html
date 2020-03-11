@@ -30,35 +30,15 @@
 <div class="container-fluid">
 
     <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
-    <div class="col-sm-2" style="background-color:lavender;">
-        <form action="to be added here" method="post" target="hiddenFrame">
-            <p>Select things you want to get</p>
-            <input type="checkbox" onClick="toggle(this)">Toggle All<br>
-            <label for="model_id"></label>
-            <input type="checkbox" id="model_id" name="checkbox">Model id<br>
-            <label for="model_name"></label>
-            <input type="checkbox" id="model_name" name="checkbox">Model name<br>
-            <label for="release_date"></label>
-            <input type="checkbox" id="release_date" name="checkbox">Release date<br>
-            <label for="weight_g"></label>
-            <input type="checkbox" id="weight_g" name="checkbox">Weight in grams<br>
-            <label for="display_size_inch"></label>
-            <input type="checkbox" id="display_size_inch" name="checkbox">Display size in inches<br>
-            <label for="resolution"></label>
-            <input type="checkbox" id="resolution" name="checkbox">Resolution<br>
-            <label for="camera"></label>
-            <input type="checkbox" id="camera" name="checkbox">Camera<br>
-            <label for="battery_capacity"></label>
-            <input type="checkbox" id="battery_capacity" name="checkbox">Battery capacity<br>
-            <label for="os_version"></label>
-            <input type="checkbox" id="os_version" name="checkbox">OS version<br>
-            <label for="category"></label>
-            <input type="checkbox" id="category" name="checkbox">Category<br>
-            <input type="submit" value="Submit">
+    <div class="col-sm-12" style="background-color:lavender;">
+        <form action="/api/v1/smartphones" method="get" target="hiddenFrame" id="getForm">
+            <label for="textGet"></label>
+            <input type="text" id="textGet" name="fields">
+            <input type="submit" value="GET">
         </form>
     </div>
 
-    <div class="col-sm-10" style="background-color:lavenderblush;">
+    <div class="col-sm-12" style="background-color:lavenderblush;">
         <table class="table">
             <thead>
             <tr>
@@ -81,14 +61,11 @@
 
 </div>
 
-</div>
 <script>
-    function toggle(source) {
-        checkboxes = document.getElementsByName('checkbox');
-        for(var i=0, n=checkboxes.length;i<n;i++) {
-            checkboxes[i].checked = source.checked;
-        }
-    }
+//    function addTextFieldToUrl() {
+//        document.getElementById('getForm').setAttribute ("action" , `/api/v1/smartphones/${document.getElementById('textGet').value}`);
+//    }
+
 </script>
 
 
