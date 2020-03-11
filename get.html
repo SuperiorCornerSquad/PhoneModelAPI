@@ -10,7 +10,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -29,42 +28,80 @@
 </nav>
 <div class="container-fluid">
 
-    <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
     <div class="col-sm-12" style="background-color:lavender;">
-        <form action="/api/v1/smartphones" method="get" target="hiddenFrame" id="getForm">
-            <label for="textGet"></label>
-            <input type="text" id="textGet" name="fields">
-            <input type="submit" value="GET">
-        </form>
+        <label>Get call</label>
+        <input type="text" id="getCall" name="getCall" placeholder="e.g. manufacturer/samsung/1">
+        <input type="button" id="getCallBtn" value="GET" onclick="getCall()">
     </div>
 
     <div class="col-sm-12" style="background-color:lavenderblush;">
         <table class="table">
             <thead>
-            <tr>
-                <th>Manufacturer</th>
-                <th>Model Id</th>
-                <th>Model name</th>
-                <th>Release date</th>
-                <th>Weight (gram)</th>
-                <th>Display size in inches</th>
-                <th>Resolution</th>
-                <th>Camera</th>
-                <th>Battery capacity</th>
-                <th>Operating system</th>
-                <th>OS version</th>
-                <th>Category</th>
-            </tr>
+                <tr id="tableHead">
+                    <th>Model Id</th>
+                    <th>Model name</th>
+                    <th>Release date</th>
+                    <th>Weight (gram)</th>
+                    <th>Display size in inches</th>
+                    <th>Resolution</th>
+                    <th>Camera</th>
+                    <th>Battery capacity</th>
+                    <th>Operating system</th>
+                    <th>OS version</th>
+                    <th>Category</th>
+                </tr>
             </thead>
+            <tbody id="tbody">
+
+            </tbody>
         </table>
     </div>
 
 </div>
 
 <script>
-//    function addTextFieldToUrl() {
-//        document.getElementById('getForm').setAttribute ("action" , `/api/v1/smartphones/${document.getElementById('textGet').value}`);
-//    }
+    function getCall() {
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                let json = JSON.parse(xmlhttp.responseText);
+                if (json.length > 0){ // something found
+                    console.table(json);
+                    addTextToTableBody(json);
+                }
+                else {
+                    alert('No phone found')
+                }
+            }
+        };
+        xmlhttp.open("GET", "/api/v1/" + document.getElementById('getCall').value ,true);
+        xmlhttp.send();
+    }
+    function addTextToTableBody(json) {
+        let x = document.getElementById('tbody');
+        let y = document.getElementById('tableHead').childElementCount;
+        console.log(y);
+        let jsonKeys, jsonValues;
+        let row;
+        let cellNames = ["Model_id", "Model_name", "Release_date", "Weight_g", "Display_size_inch",
+            "Resolution", "Camera", "Battery_capacity", "Operating_system", "OS_version", "Category"];
+        for (let i = 0; i < json.length; i++) {
+            row = x.insertRow(-1);
+            jsonKeys = Object.keys(json[i]);
+            jsonValues = Object.values(json[i]);
+            console.log(jsonValues);
+            for (let i = 0; i < y; i++) {
+                row.insertCell(-1).setAttribute("name", cellNames[i]);
+            }
+            for (let j = 0; j < jsonKeys.length; j++) {
+                for (let i = 0; i < row.children.length; i++) {
+                    if (row.children[i].getAttribute("name") === jsonKeys[j]) {
+                        row.children[i].innerHTML = jsonValues[j];
+                    }
+                }
+            }
+        }
+    }
 
 </script>
 
