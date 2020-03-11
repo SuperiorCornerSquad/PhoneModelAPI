@@ -13,11 +13,15 @@ const con = mysql.createConnection({
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
 });
+
 const query = util.promisify(con.query).bind(con);
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
+const fieldsToSqlColumns = {model_id:"Model_id", model_name:"Model_name", release_date:"Release_date", weight_g:"Weight_g",
+    display_size_inch:"Display_size_inch", resolution:"Resolution", camera:"Camera", battery_capacity:"Battery_capacity",
+    operating_system:"Operating_system", os_version:"OS_version", category:"Category"};
 /**
  * Creates a table in the database with the manufacturer's name provided as a paramater
  */
@@ -91,13 +95,11 @@ router.post("/api/v1/manufacturers/:mfr", (req, res) => {
 router.put("/api/v1/manufacturers/:mfr", async (req, res) => {
     let manufacturer = req.params.mfr;
     let newName = req.body.manufacturer;
-    console.log(manufacturer + newName);
     (async () => {
         try {
             if(await checkManufacturer()){
                 const sql = "RENAME TABLE ?? TO ??";
                 await query(sql, [manufacturer, newName]);
-                console.log(manufacturer + newName);
                 res.sendStatus(200);
             }else{
                 res.status(500).send("Valmistajaa ei löytynyt");
@@ -138,12 +140,22 @@ router.put("/api/v1/manufacturers/:mfr/:id", (req, res) => {
     let phoneID = req.params.id;
     let json = req.body;
 
+    let fieldsToBeUpdated = "";
+    let valuesToBeUpdated = [manufacturer];
+
+    for(let i in json){
+        fieldsToBeUpdated += fieldsToSqlColumns[i] + "=" + "?" + ",";
+        valuesToBeUpdated.push(json[i]);
+    }
+    valuesToBeUpdated.push(phoneID);
+    fieldsToBeUpdated = fieldsToBeUpdated.substring(0, fieldsToBeUpdated.length -1);
+
     //update the json datafield values into the database
     (async () => {
         try {
             if(await checkManufacturer()) {
-                const sql = "UPDATE ?? SET Model_name = ?, Release_date = ?, Weight_g = ?, Display_size_inch = ?, Resolution = ?, Camera = ?, Battery_capacity = ?, Operating_system = ?, OS_version = ?, Category = ? WHERE Model_id=?";
-                await query(sql, [manufacturer, json.Model_name, json.Release_date, json.Weight_g, json.Display_size_inch, json.Resolution, json.Camera, json.Battery_capacity, json.Operating_system, json.OS_version, json.Category, phoneID]);
+                const sql = "UPDATE ?? SET " + fieldsToBeUpdated + " WHERE Model_id=?";
+                await query(sql, valuesToBeUpdated);
                 res.sendStatus(200);
             }else{
                 res.status(500).send("Valmistajaa ei löytynyt");
