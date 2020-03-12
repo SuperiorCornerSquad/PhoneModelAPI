@@ -61,6 +61,7 @@
 
 <script>
     function getCall() {
+        deleteTable();
         let xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -102,7 +103,12 @@
             }
         }
     }
-
+    function deleteTable() {
+        let tableBody = document.getElementById('tbody');
+        for(let i=0; i < tableBody.childElementCount; i++) {
+            tableBody.deleteRow(i);
+        }
+    }
 </script>
 
 
