@@ -30,7 +30,7 @@
 
     <div class="col-sm-12" style="background-color:lavender;">
         <label>Get call</label>
-        <input type="text" id="getCall" name="getCall" placeholder="e.g. manufacturer/samsung/1">
+        <input type="text" id="getCall" name="getCall" placeholder="e.g. manufacturers/samsung/1">
         <input type="button" id="getCallBtn" value="GET" onclick="getCall()">
     </div>
 
@@ -61,6 +61,7 @@
 
 <script>
     function getCall() {
+        deleteTable();
         let xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -74,7 +75,7 @@
                 }
             }
         };
-        xmlhttp.open("GET", "/api/v1/" + document.getElementById('getCall').value ,true);
+        xmlhttp.open("GET", "http://localhost:8081/api/v1/" + document.getElementById('getCall').value ,true);
         xmlhttp.send();
     }
     function addTextToTableBody(json) {
@@ -102,7 +103,13 @@
             }
         }
     }
-
+    function deleteTable() {
+        let tableBody = document.getElementById('tbody');
+        let children = tableBody.childElementCount;
+        for(let i=0; i < children; i++) {
+            tableBody.deleteRow(-1);
+        }
+    }
 </script>
 
 
