@@ -5,6 +5,7 @@ const url = require("url");
 const path = require("path");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
+const cors = require("cors");
 require("dotenv").config();
 
 const con = mysql.createConnection({
@@ -17,6 +18,7 @@ const query = util.promisify(con.query).bind(con);
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
+router.use(cors());
 
 router.get("/", (req, res) => {
 	res.sendFile(path.join(__dirname+"/index.html"));
