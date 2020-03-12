@@ -32,38 +32,18 @@ router.put("/api/v1/manufacturers/:mfr", async (req, res) => {
 	let newName = req.body.manufacturer;
 	(async () => {
 		try {
-			if(await checkManufacturer()){
+			if(await checkManufacturer(manufacturer)){
 				const sql = "RENAME TABLE ?? TO ??";
 				await query(sql, [manufacturer, newName]);
 				res.sendStatus(200);
 			}else{
-				res.status(500).send("Valmistajaa ei löytynyt");
+				res.status(500).send("Manufacturer not found");
 			}
 		} catch (err) {
 			console.error(err);
 			res.sendStatus(500);
 		}
 	})();
-
-	/**
-	 * Check if manufacturer exists in database
-	 * @returns {Promise<boolean>}
-	 */
-	async function checkManufacturer() {
-		try {
-			const sql = "SHOW TABLES";
-			const result = await query(sql);
-			for(let i in result){
-				if(result[i].Tables_in_phonemodelapi === manufacturer){
-					return true;
-				}
-			}
-			return false;
-		} catch(err) {
-			console.error(err);
-			res.sendStatus(500);
-		}
-	}
 });
 
 /**
@@ -88,37 +68,37 @@ router.put("/api/v1/manufacturers/:mfr/:id", (req, res) => {
 	//update the json datafield values into the database
 	(async () => {
 		try {
-			if(await checkManufacturer()) {
+			if(await checkManufacturer(manufacturer)) {
 				const sql = "UPDATE ?? SET " + fieldsToBeUpdated + " WHERE Model_id=?";
 				await query(sql, valuesToBeUpdated);
 				res.sendStatus(200);
 			}else{
-				res.status(500).send("Valmistajaa ei löytynyt");
+				res.status(500).send("Manufacturer not found");
 			}
 		}catch(err){
 			console.error(err);
 			res.sendStatus(500);
 		}
 	})();
-	/**
-	 * Check if manufacturer exists in database
-	 * @returns {Promise<boolean>}
-	 */
-	async function checkManufacturer() {
-		try {
-			const sql = "SHOW TABLES";
-			const result = await query(sql);
-			for(let i in result){
-				if(result[i].Tables_in_phonemodelapi === manufacturer){
-					return true;
-				}
-			}
-			return false;
-		} catch(err) {
-			console.error(err);
-			res.sendStatus(500);
-		}
-	}
 });
+
+/**
+ * Check if manufacturer exists in database
+ * @returns {Promise<boolean>}
+ */
+async function checkManufacturer(manufacturer) {
+	try {
+		const sql = "SHOW TABLES";
+		const result = await query(sql);
+		for(let i in result){
+			if(result[i].Tables_in_phonemodelapi === manufacturer){
+				return true;
+			}
+		}
+		return false;
+	} catch(err) {
+		console.error(err);
+	}
+}
 
 module.exports = router;
