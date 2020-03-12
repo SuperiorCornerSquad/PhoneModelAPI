@@ -189,11 +189,11 @@ router.put("/api/v1/manufacturers/:mfr/:id", (req, res) => {
 /**
  * Deletes a manufacturer and its product line from database
  */
-router.delete("/api/v1/manufacturers", async (req, res) => {
+router.delete("/api/v1/manufacturers/:mfr", async (req, res) => {
     (async () => {
         try {
             const sql = "DROP TABLE IF EXISTS ??";
-            let manu = req.body.manufacturer;
+            let manu = req.params.mfr;
             await query(sql, manu);
             res.sendStatus(200);
         } catch (err) {
