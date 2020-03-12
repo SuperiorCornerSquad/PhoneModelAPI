@@ -19,6 +19,10 @@ const query = util.promisify(con.query).bind(con);
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
+const fieldsToSqlColumns = {model_id:"Model_id", model_name:"Model_name", release_date:"Release_date", weight_g:"Weight_g",
+    display_size_inch:"Display_size_inch", resolution:"Resolution", camera:"Camera", battery_capacity:"Battery_capacity",
+    operating_system:"Operating_system", os_version:"OS_version", category:"Category"};
+
 /**
  * Creates a table in the database with the manufacturer's name provided as a paramater
  */
@@ -76,8 +80,25 @@ router.post("/api/v1/manufacturers/:mfr", (req, res) => {
      */
     async function insertDataIntoDatabase() {
         try {
-            const sql = "INSERT INTO ?? (Model_name, Release_date, Weight_g, Display_size_inch, Resolution, Camera, Battery_capacity, Operating_system, OS_version, Category) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            await query(sql, [manufacturer, json.model_name, json.release_date, json.weight_g, json.display_size_inch, json.resolution, json.camera, json.battery_capacity, json.operating_system, json.os_version, json.category]);
+            let fieldsToBeInserted = "";
+            let valuesToBeInserted = [manufacturer];
+            let numberOfValues = "";
+
+            for(let i in json){
+                fieldsToBeInserted += fieldsToSqlColumns[i] + ",";
+                numberOfValues += "?,";
+                if(json[i].length != 0) {
+                    valuesToBeInserted.push(json[i]);
+                }else{
+                    valuesToBeInserted.push(null);
+                }
+            }
+
+            fieldsToBeInserted = fieldsToBeInserted.substring(0, fieldsToBeInserted.length -1);
+            numberOfValues = numberOfValues.substring(0, numberOfValues.length -1);
+            
+            const sql = "INSERT INTO ?? (" + fieldsToBeInserted + ")  VALUES (" + numberOfValues + ")";
+            await query(sql, valuesToBeInserted);
             res.sendStatus(200);
         }catch(err){
             console.error(err);
