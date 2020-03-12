@@ -30,17 +30,42 @@
 
 
     <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
-    <div class="col-sm-2" style="background-color:lavender;">
-
-    </div>
-
-    <div class="col-sm-10" style="background-color:lavenderblush;">
-
+    <div class="col-sm-3" style="background-color:lavender;">
+        <label>Delete manufacturer</label>
+        <input type="text" id="deleteCallMfr" name="deleteCallMfr" placeholder="e.g. manufacturers/"><br>
+        <input type="button" id="deleteCallMfrBtn" value="DELETE" onclick="deleteManufacturer()"> <br><br>
+        <label>Delete phone</label><br>
+        <input type="text" id="deleteCallPhone" name="deleteCallPhone" placeholder="e.g. manufacturers/samsung/1">
+        <input type="button" id="deleteCallPhoneBtn" value="DELETE Phone" onclick="deletePhone()">
     </div>
 
 </div>
 
-</div>
+<script>
+    function deletePhone() {
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                console.log(xmlhttp.responseText)
+
+            }
+        };
+        xmlhttp.open("DELETE", "/api/v1/" + document.getElementById('deleteCallPhone').value ,true);
+        xmlhttp.send();
+    }
+
+    function deleteManufacturer() {
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                console.log(xmlhttp.responseText)
+            }
+        };
+        xmlhttp.open("DELETE", "/api/v1/" + document.getElementById('deleteCallMfr').value ,true);
+        xmlhttp.send();
+    }
+
+</script>
 
 
 
