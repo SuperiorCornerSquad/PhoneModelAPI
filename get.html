@@ -105,8 +105,9 @@
     }
     function deleteTable() {
         let tableBody = document.getElementById('tbody');
-        for(let i=0; i < tableBody.childElementCount; i++) {
-            tableBody.deleteRow(i);
+        let children = tableBody.childElementCount;
+        for(let i=0; i < children; i++) {
+            tableBody.deleteRow(-1);
         }
     }
 </script>
