@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const util = require("util");
 const url = require("url");
-const path = require("path");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
 const cors = require("cors");
@@ -16,26 +15,13 @@ const con = mysql.createConnection({
 });
 const query = util.promisify(con.query).bind(con);
 
+router.use(cors());
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
-router.use(cors());
 
-router.get("/", (req, res) => {
-	res.sendFile(path.join(__dirname+"/index.html"));
-});
-router.get("/get", (req, res) => {
-	res.sendFile(path.join(__dirname+"/get.html"));
-});
-router.get("/post", (req, res) => {
-	res.sendFile(path.join(__dirname+"/post.html"));
-});
-router.get("/update", (req, res) => {
-	res.sendFile(path.join(__dirname+"/update.html"));
-});
-router.get("/delete", (req, res) => {
-	res.sendFile(path.join(__dirname+"/delete.html"));
-});
-
+/**
+ * Gets all manufacturers in the database and responds with a json list of all the manufacturers.
+ */
 router.get("/api/v1/manufacturers", (req, res) => {
 	(async () => {
 		try {
@@ -52,6 +38,11 @@ router.get("/api/v1/manufacturers", (req, res) => {
 	})();
 });
 
+/**
+ * Gets all phones of the manufacturer that has been provided in the url.
+ * Also checks for any parameters given in the url and provides the data according to those.
+ * Responds with a json list of all phone objects.
+ */
 router.get("/api/v1/manufacturers/:mfr", (req, res) => {
 	let fieldsToSqlColumns = {id:"Model_id", model:"Model_name", releaseDate:"Release_date", weight:"Weight_g",
 		displaySize:"Display_size_inch", resolution:"Resolution", cameraRes:"Camera", batteryCpty:"Battery_capacity",
@@ -64,6 +55,10 @@ router.get("/api/v1/manufacturers/:mfr", (req, res) => {
 		minCameraRes:req.query.minCameraRes, maxCameraRes:req.query.maxCameraRes, minBatteryCpty:req.query.minBatteryCpty,
 		maxBatteryCpty:req.query.maxBatteryCpty, minOsVersion:req.query.minOsVersion, maxOsVersion:req.query.maxOsVersion};
 
+	/**
+	 * Checks if there are any queries in the given url.
+	 * @returns {boolean}
+	 */
 	function areQueriesUndefined() {
 		for (let key in queries) {
 			if (typeof queries[key] !== 'undefined')
@@ -72,6 +67,10 @@ router.get("/api/v1/manufacturers/:mfr", (req, res) => {
 		return true;
 	}
 
+	/**
+	 * Returns all the manufacturers in the database.
+	 * @returns {Promise<any>}
+	 */
 	async function getManufacturers() {
 		try {
 			let sqlQuery = "SELECT DISTINCT table_name FROM information_schema.columns WHERE column_name ='Category'";
@@ -83,6 +82,12 @@ router.get("/api/v1/manufacturers/:mfr", (req, res) => {
 		}
 	}
 
+	/**
+	 * Creates the sql query that is used to get the phones.
+	 * Checks all the given parameters in the url and inserts them into the sql query.
+	 * @param manufacturers
+	 * @returns {Promise<string>}
+	 */
 	async function createSqlQuery(manufacturers) {
 		try {
 			let hasMfr = false;
@@ -173,6 +178,11 @@ router.get("/api/v1/manufacturers/:mfr", (req, res) => {
 	})();
 });
 
+/**
+ * Gets a phone with the specified manufacturer and id that have been provided in the url.
+ * Also checks for any parameters given in the url and provides the data according to those.
+ * Responds with a json list that has an object of the specified phone and its contents inside it.
+ */
 router.get("/api/v1/manufacturers/:mfr/:id", (req, res) => {
 	let fieldsToSqlColumns = {id:"Model_id", model:"Model_name", releaseDate:"Release_date", weight:"Weight_g",
 		displaySize:"Display_size_inch", resolution:"Resolution", cameraRes:"Camera", batteryCpty:"Battery_capacity",
@@ -182,6 +192,10 @@ router.get("/api/v1/manufacturers/:mfr/:id", (req, res) => {
 	let fields;
 	if(typeof req.query.fields !== 'undefined') fields = req.query.fields.split(",");
 
+	/**
+	 * Returns all the manufacturers in the database.
+	 * @returns {Promise<any>}
+	 */
 	async function getManufacturers() {
 		try {
 			let sqlQuery = "SELECT DISTINCT table_name FROM information_schema.columns WHERE column_name ='Category'";
@@ -193,6 +207,12 @@ router.get("/api/v1/manufacturers/:mfr/:id", (req, res) => {
 		}
 	}
 
+	/**
+	 * Creates the sql query that is used to get the phone.
+	 * Checks for the fields parameter in the url and inserts its values into the sql query.
+	 * @param manufacturers
+	 * @returns {Promise<string>}
+	 */
 	async function createSqlQuery(manufacturers) {
 		try {
 			let hasMfr = false;
@@ -235,8 +255,17 @@ router.get("/api/v1/manufacturers/:mfr/:id", (req, res) => {
 	})();
 });
 
+/**
+ * Gets smartphones from the database.
+ * Also checks for any parameters given in the url and provides the data according to those.
+ * Responds with a json list of all smartphone objects.
+ */
 router.get("/api/v1/smartphones", (req, res) => {
 
+	/**
+	 * Returns all the manufacturers in the database.
+	 * @returns {Promise<any>}
+	 */
 	async function getManufacturers() {
 		try {
 			let sqlQuery = "SELECT DISTINCT table_name FROM information_schema.columns WHERE column_name ='Category'";
@@ -248,6 +277,12 @@ router.get("/api/v1/smartphones", (req, res) => {
 		}
 	}
 
+	/**
+	 * Creates the sql query for getting smartphones from the database.
+	 * TODO Checks for parameters in the url and inserts them into the sql query.
+	 * @param tables
+	 * @returns {Promise<void>}
+	 */
 	async function getPhones(tables) {
 		try {
 			let sqlQuery = "";
@@ -271,8 +306,17 @@ router.get("/api/v1/smartphones", (req, res) => {
 	})();
 });
 
+/**
+ * Gets phablets (phone-tablets) from the database.
+ * Also checks for any parameters given in the url and provides the data according to those.
+ * Responds with a json list of all phablet objects.
+ */
 router.get("/api/v1/phablets", (req, res) => {
 
+	/**
+	 * Returns all the manufacturers in the database.
+	 * @returns {Promise<any>}
+	 */
 	async function getManufacturers() {
 		try {
 			let sqlQuery = "SELECT DISTINCT table_name FROM information_schema.columns WHERE column_name ='Category'";
@@ -284,6 +328,12 @@ router.get("/api/v1/phablets", (req, res) => {
 		}
 	}
 
+	/**
+	 * Creates the sql query for getting phablets (phone-tablets) from the database.
+	 * TODO Checks for parameters in the url and inserts them into the sql query.
+	 * @param tables
+	 * @returns {Promise<void>}
+	 */
 	async function getPhablets(tables) {
 		try {
 			let sqlQuery = "";
