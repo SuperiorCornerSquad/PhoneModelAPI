@@ -1,5 +1,17 @@
 # PhoneModelAPI
 
+<!-- TOC depthFrom:1 depthTo:2 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [PhoneModelAPI](#phonemodelapi)
+    - [User guide](#user-guide)
+    - [API overview](#api-overview)
+    - [Get calls](#get-calls)
+    - [Post calls](#post-calls)
+    - [Update calls](#update-calls)
+    - [Delete calls](#delete-calls)
+
+<!-- /TOC -->
+
 ## User guide
 
 To start running the program you need a MySQL database, PHPStorm or a similar IDE.
@@ -41,7 +53,7 @@ The API responds in JSON format.
 * **Response:**
 
   * **Code:** 200 <br />
-    **Content:** `["apple", "samsung"]`
+  * **Content:** `["apple", "samsung"]`
  
 ***
 * **URL**
@@ -73,7 +85,7 @@ maxOsVersion=[float]
 * **Response:**
 
   * **Code:** 200 <br />
-    **Content:** `[{"Model_id":1,"Model_name":"Samsung Galaxy S20 Ultra 5G","Weight_g":500,"Display_size_inch":6.9},{"Model_id":4,"Model_name":"Samsung Galaxy Note10+ 5G","Weight_g":198,"Display_size_inch":6.8}]`
+  * **Content:** `[{"Model_id":1,"Model_name":"Samsung Galaxy S20 Ultra 5G","Weight_g":500,"Display_size_inch":6.9},{"Model_id":4,"Model_name":"Samsung Galaxy Note10+ 5G","Weight_g":198,"Display_size_inch":6.8}]`
  
 ***
 
@@ -92,7 +104,7 @@ maxOsVersion=[float]
 * **Response:**
 
   * **Code:** 200 <br />
-    **Content:** `[{"Model_name":"Samsung Galaxy S20 Ultra 5G","Category":"phablet"}]`
+  * **Content:** `[{"Model_name":"Samsung Galaxy S20 Ultra 5G","Category":"phablet"}]`
 
 ***
 
@@ -127,7 +139,7 @@ maxOsVersion=[float]
 * **Response:**
 
   * **Code:** 200 <br />
-    **Content:** `[{"Model_name":"Apple iPhone 11 Pro MAX"},{"Model_name":"Samsung Galaxy Z Flip"}]`
+  * **Content:** `[{"Model_name":"Apple iPhone 11 Pro MAX"},{"Model_name":"Samsung Galaxy Z Flip"}]`
 
 ## Post calls
 
@@ -156,7 +168,6 @@ maxOsVersion=[float]
 *  **JSON Body**
 
   `{"Model_name": "Samsung Galaxy S20 Ultra 5G","Release_date": "2020-03-05","Weight_g": 222,"Display_size_inch": 6.9,"Resolution": "1440x3200","Camera": 108,"Battery_capacity": 5000,"Operating_system": "Android","OS_version": 10,"Category": "Phablet"}`
-        
 
 * **Sample Call:**
 
@@ -166,6 +177,8 @@ maxOsVersion=[float]
 
   * **Code:** 200
  
- ## Update calls
- 
- 
+## Update calls
+
+
+
+## Delete calls
