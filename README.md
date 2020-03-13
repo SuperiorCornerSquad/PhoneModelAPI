@@ -34,7 +34,7 @@ The API responds in JSON format.
 
 * **Base URL**
 
-`/api/v1/`
+    `/api/v1/`
 
 ## Get calls
 
@@ -44,7 +44,7 @@ The API responds in JSON format.
   
 *  **Optional URL Params**
 
-  `no params`
+    `no params`
 
 * **Sample Call:**
 
@@ -95,7 +95,7 @@ maxOsVersion=[float]
   
 *  **Optional URL Params**
 
-  `fields=[id,model,releaseDate,weight,displaySize,resolution,cameraRes,batteryCpty,os,osVersion,category]`
+    `fields=[id,model,releaseDate,weight,displaySize,resolution,cameraRes,batteryCpty,os,osVersion,category]`
 
 * **Sample Call:**
 
@@ -149,7 +149,7 @@ maxOsVersion=[float]
   
 *  **JSON Body**
 
-  `{"manufacturer":"Huawei"}`
+    `{"manufacturer":"Huawei"}`
 
 * **Sample Call:**
 
@@ -167,7 +167,7 @@ maxOsVersion=[float]
   
 *  **JSON Body**
 
-  `{"Model_name": "Samsung Galaxy S20 Ultra 5G","Release_date": "2020-03-05","Weight_g": 222,"Display_size_inch": 6.9,"Resolution": "1440x3200","Camera": 108,"Battery_capacity": 5000,"Operating_system": "Android","OS_version": 10,"Category": "Phablet"}`
+    `{"Model_name": "Samsung Galaxy S20 Ultra 5G","Release_date": "2020-03-05","Weight_g": 222,"Display_size_inch": 6.9,"Resolution": "1440x3200","Camera": 108,"Battery_capacity": 5000,"Operating_system": "Android","OS_version": 10,"Category": "Phablet"}`
 
 * **Sample Call:**
 
