@@ -53,7 +53,7 @@ The API responds in JSON format.
 * **Response:**
 
   * **Code:** 200 <br />
-    **Content:** `["apple", "samsung"]`
+  * **Content:** `["apple", "samsung"]`
  
 ***
 * **URL**
@@ -85,7 +85,7 @@ maxOsVersion=[float]
 * **Response:**
 
   * **Code:** 200 <br />
-    **Content:** `[{"Model_id":1,"Model_name":"Samsung Galaxy S20 Ultra 5G","Weight_g":500,"Display_size_inch":6.9},{"Model_id":4,"Model_name":"Samsung Galaxy Note10+ 5G","Weight_g":198,"Display_size_inch":6.8}]`
+  * **Content:** `[{"Model_id":1,"Model_name":"Samsung Galaxy S20 Ultra 5G","Weight_g":500,"Display_size_inch":6.9},{"Model_id":4,"Model_name":"Samsung Galaxy Note10+ 5G","Weight_g":198,"Display_size_inch":6.8}]`
  
 ***
 
@@ -104,7 +104,7 @@ maxOsVersion=[float]
 * **Response:**
 
   * **Code:** 200 <br />
-    **Content:** `[{"Model_name":"Samsung Galaxy S20 Ultra 5G","Category":"phablet"}]`
+  * **Content:** `[{"Model_name":"Samsung Galaxy S20 Ultra 5G","Category":"phablet"}]`
 
 ***
 
@@ -139,7 +139,7 @@ maxOsVersion=[float]
 * **Response:**
 
   * **Code:** 200 <br />
-    **Content:** `[{"Model_name":"Apple iPhone 11 Pro MAX"},{"Model_name":"Samsung Galaxy Z Flip"}]`
+  * **Content:** `[{"Model_name":"Apple iPhone 11 Pro MAX"},{"Model_name":"Samsung Galaxy Z Flip"}]`
 
 ## Post calls
 
