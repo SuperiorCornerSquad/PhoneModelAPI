@@ -2,10 +2,10 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 const path = require("path");
-const getRouter = require("./getRoutes");
-const postRouter = require("./postRoutes");
-const updateRouter = require("./updateRoutes");
-const deleteRouter = require("./deleteRoutes");
+const getRouter = require("./RESTroutes/getRoutes");
+const postRouter = require("./RESTroutes/postRoutes");
+const updateRouter = require("./RESTroutes/updateRoutes");
+const deleteRouter = require("./RESTroutes/deleteRoutes");
 
 app.use(morgan("short"));
 app.use(getRouter);
