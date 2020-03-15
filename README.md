@@ -34,7 +34,7 @@ The API responds in JSON format.
 
 * **Base URL**
 
-    `/api/v1/`
+    `/api/v1`
 
 ## Get calls
 
@@ -53,7 +53,7 @@ The API responds in JSON format.
 * **Response:**
 
   * **Code:** 200 <br />
-  * **Content:** `["apple", "samsung"]`
+  * **Content:** `["apple", "samsung", "huawei"]`
  
 ***
 * **URL**
@@ -179,6 +179,73 @@ maxOsVersion=[float]
  
 ## Update calls
 
+* **URL**
 
+  /manufacturers/:mfr
+  
+*  **JSON Body**
+
+    `{"manufacturer": "Googel"}`
+
+* **Sample Call:**
+
+  `PUT http://localhost:8081/api/v1/manufacturers/google`
+  
+* **Response:**
+
+  * **Code:** 200
+ 
+***
+
+* **URL**
+
+  /manufacturers/:mfr/:id
+  
+*  **JSON Body**
+
+    `{"release_date": "2019-10-21", "battery_capacity": 4000, "os_version": 10}`
+
+* **Sample Call:**
+
+  `PUT http://localhost:8081/api/v1/manufacturers/apple/1`
+  
+* **Response:**
+
+  * **Code:** 200
+ 
 
 ## Delete calls
+
+* **URL**
+
+  /manufacturers/:mfr
+  
+*  **Optional URL Params**
+
+    `no params`
+
+* **Sample Call:**
+
+  `DELETE http://localhost:8081/api/v1/manufacturers/huawei`
+  
+* **Response:**
+
+  * **Code:** 200
+ 
+ ***
+ 
+ * **URL**
+
+  /manufacturers/:mfr/:id
+  
+*  **Optional URL Params**
+
+    `no params`
+
+* **Sample Call:**
+
+  `DELETE http://localhost:8081/api/v1/manufacturers/samsung/1`
+  
+* **Response:**
+
+  * **Code:** 200
