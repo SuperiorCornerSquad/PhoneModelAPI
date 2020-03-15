@@ -236,7 +236,7 @@ maxOsVersion=[float]
  
  * **URL**
 
-  /manufacturers/:mfr/:id
+    /manufacturers/:mfr/:id
   
 *  **Optional URL Params**
 

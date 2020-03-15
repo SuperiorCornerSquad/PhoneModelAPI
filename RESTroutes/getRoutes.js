@@ -430,7 +430,7 @@ router.get("/api/v1/phablets", (req, res) => {
 
 	/**
 	 * Creates the sql query for getting phablets (phone-tablets) from the database.
-	 * TODO Checks for parameters in the url and inserts them into the sql query.
+	 * Checks for parameters in the url and inserts them into the sql query.
 	 * @param manufacturers
 	 * @returns {Promise<string>}
 	 */
