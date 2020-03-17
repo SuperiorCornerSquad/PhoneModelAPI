@@ -36,14 +36,29 @@
 
     <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
 
-    <div class="col-sm-12" style="background-color:lavender;">
-        <label>Get call</label>
+    <!-- -->
+    <div class="col-sm-5" style="background-color:lavender;">
+        <label>Get manufacturer</label>
+        <input type="text" id="getMfrCall" name="getCall" placeholder="e.g. samsung">
+        <input type="button" id="getMfrCallBtn" value="GET" onclick="getManufacturerCall()">
+        <input type="button" id="updateMfrBtn" value="UPDATE" onclick="updateManufacturer()">
+    </div>
+    <div class="col-sm-7" style="background-color:lavender;">
+        <label>Get phone</label>
         <input type="text" id="getCall" name="getCall" placeholder="e.g. samsung/1">
         <input type="button" id="getCallBtn" value="GET" onclick="getCall()">
         <input type="button" id="updateBtn" value="UPDATE" onclick="updateProduce()">
     </div>
 
-    <div class="col-sm-12" style="background-color:lavenderblush;">
+
+    <!--  -->
+    <div class="col-sm-3" style="background-color:lavenderblush;">
+        <form action="/api/v1/manufacturers/" method="post" target="hiddenFrame" id="postFormMfr">
+            <label for="mfr">Manufacturer</label> <br>
+            <input type="text" id="trueMfr" name="mfr" value=""><br>
+        </form>
+    </div>
+    <div class="col-sm-9" style="background-color:lavenderblush;">
         <div class="col-sm-3">
 
         </div>
@@ -84,7 +99,6 @@
 
 </div>
 
-</div>
 
 <script>
     function getCall() {
