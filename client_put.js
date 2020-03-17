@@ -40,7 +40,7 @@ function updateProduce() {
         }
     };
 
-    xhrPut.open("PUT", `http://localhost:8081/api/v1/manufacturers/${manufacturer}/${phoneID}` ,true)
+    xhrPut.open("PUT", `/api/v1/manufacturers/${manufacturer}/${phoneID}` ,true)
     xhrPut.setRequestHeader("Content-type", "application/json");
     xhrPut.send(jsonBody);
 }
