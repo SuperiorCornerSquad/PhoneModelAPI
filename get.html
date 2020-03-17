@@ -108,7 +108,7 @@
                 }
             }
         };
-        xmlhttp.open("GET", "http://localhost:8081/api/v1/" + document.getElementById('getMfrCall').value ,true);
+        xmlhttp.open("GET", "/api/v1/" + document.getElementById('getMfrCall').value ,true);
         xmlhttp.send();
     }
     function addTextToTableBodyMfr(json) {
