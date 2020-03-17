@@ -12,6 +12,11 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="client_put.js"></script>
 </head>
+<style>
+    label {
+        margin-bottom: 6px;
+    }
+</style>
 <body>
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -19,11 +24,11 @@
             <a class="navbar-brand" href="#">PhoneModelAPI</a>
         </div>
         <ul class="nav navbar-nav">
-            <li class="active"><a href="http://localhost:8081/">Home</a></li>
-            <li><a href="http://localhost:8081/get">Get</a></li>
-            <li><a href="http://localhost:8081/post">Post</a></li>
+            <li class="active"><a href="/">Home</a></li>
+            <li><a href="/get">Get</a></li>
+            <li><a href="/post">Post</a></li>
             <li><a href="#">Update</a></li>
-            <li><a href="http://localhost:8081/delete">Delete</a></li>
+            <li><a href="/delete">Delete</a></li>
         </ul>
     </div>
 </nav>
@@ -31,14 +36,29 @@
 
     <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe>
 
-    <div class="col-sm-12" style="background-color:lavender;">
-        <label>Get call</label>
+    <!-- -->
+    <div class="col-sm-5" style="background-color:lavender;">
+        <label>Get manufacturer</label>
+        <input type="text" id="getMfrCall" name="getCall" placeholder="e.g. samsung">
+        <input type="button" id="getMfrCallBtn" value="GET" onclick="getManufacturerCall()">
+        <input type="button" id="updateMfrBtn" value="UPDATE" onclick="updateManufacturer()">
+    </div>
+    <div class="col-sm-7" style="background-color:lavender;">
+        <label>Get phone</label>
         <input type="text" id="getCall" name="getCall" placeholder="e.g. samsung/1">
         <input type="button" id="getCallBtn" value="GET" onclick="getCall()">
         <input type="button" id="updateBtn" value="UPDATE" onclick="updateProduce()">
     </div>
 
-    <div class="col-sm-12" style="background-color:lavenderblush;">
+
+    <!--  -->
+    <div class="col-sm-3" style="background-color:lavenderblush;">
+        <form action="/api/v1/manufacturers/" method="post" target="hiddenFrame" id="postFormMfr">
+            <label for="mfr">Manufacturer</label> <br>
+            <input type="text" id="trueMfr" name="mfr" value=""><br>
+        </form>
+    </div>
+    <div class="col-sm-9" style="background-color:lavenderblush;">
         <div class="col-sm-3">
 
         </div>
@@ -50,11 +70,11 @@
                 <label for="model_id">Model id</label> <br>
                 <label for="model_name">Model name</label> <br>
                 <label for="release_date">Release date</label><br>
-                <label for="weight_g">Weight</label><br>
-                <label for="display_size_inch">Display size in inches</label><br>
+                <label for="weight_g">Weight (gram)</label><br>
+                <label for="display_size_inch">Display size (inch)</label><br>
                 <label for="resolution">Resolution</label><br>
-                <label for="camera">Camera</label><br>
-                <label for="battery_capacity">Battery Capacity</label><br>
+                <label for="camera">Camera (MP)</label><br>
+                <label for="battery_capacity">Battery Capacity (mAh)</label><br>
                 <label for="operating_system">Operating System</label><br>
                 <label for="os_version">OS Version</label><br>
                 <label for="category">Category</label><br>
@@ -64,7 +84,7 @@
                 <input type="text" id="mfr" name="mfr" disabled value=""><br>
                 <input type="text" id="model_id" name="model_id" disabled value=""><br>
                 <input type="text" id="model_name" name="model_name" value=""><br>
-                <input type="text" id="release_date" name="release_date" value=""><br>
+                <input type="date" id="release_date" name="release_date" value=""><br>
                 <input type="text" id="weight_g" name="weight_g" value=""><br>
                 <input type="text" id="display_size_inch" name="display_size_inch" value=""><br>
                 <input type="text" id="resolution" name="resolution" value=""><br>
@@ -79,7 +99,6 @@
 
 </div>
 
-</div>
 
 <script>
     function getCall() {
