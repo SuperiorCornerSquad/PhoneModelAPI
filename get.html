@@ -32,6 +32,21 @@
         <label>Get call</label>
         <input type="text" id="getCall" name="getCall" placeholder="e.g. manufacturers/samsung/1">
         <input type="button" id="getCallBtn" value="GET" onclick="getCall()">
+
+        <label>Get manufacturers</label>
+        <input type="text" id="getMfrCall" name="getMfrCall" placeholder="e.g. manufacturers">
+        <input type="button" id="getMfrCallBtn" value="GET" onclick="getMfrCall()">
+        <table>
+            <thead id="theadMfr">
+                <tr>
+                 <td>Manufacturers</td>
+                </tr>
+            </thead>
+            <tbody id="tbodyMfr">
+
+            </tbody>
+        </table>
+
     </div>
 
     <div class="col-sm-12" style="background-color:lavenderblush;">
@@ -61,7 +76,7 @@
 
 <script>
     function getCall() {
-        deleteTable();
+        deleteTable(document.getElementById("tbody"));
         let xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -77,6 +92,37 @@
         };
         xmlhttp.open("GET", "http://localhost:8081/api/v1/" + document.getElementById('getCall').value ,true);
         xmlhttp.send();
+    }
+    function getMfrCall() {
+        deleteTable(document.getElementById("tbodyMfr"));
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                let json = JSON.parse(xmlhttp.responseText);
+                if (json.length > 0){ // something found
+                    console.table(json);
+                    addTextToTableBodyMfr(json);
+                }
+                else {
+                    alert('No manufacturer found')
+                }
+            }
+        };
+        xmlhttp.open("GET", "http://localhost:8081/api/v1/" + document.getElementById('getMfrCall').value ,true);
+        xmlhttp.send();
+    }
+    function addTextToTableBodyMfr(json) {
+        let x = document.getElementById('tbodyMfr');
+        console.log(x);
+        let row;
+        let cellName = "Manufacturer";
+        let cell;
+        for (let i = 0; i < json.length; i++) {
+            row = x.insertRow(-1);
+            cell = row.insertCell(-1);
+            cell.setAttribute("name", cellName);
+            cell.innerHTML = json[i];
+        }
     }
     function addTextToTableBody(json) {
         let x = document.getElementById('tbody');
@@ -103,8 +149,7 @@
             }
         }
     }
-    function deleteTable() {
-        let tableBody = document.getElementById('tbody');
+    function deleteTable(tableBody) {
         let children = tableBody.childElementCount;
         for(let i=0; i < children; i++) {
             tableBody.deleteRow(-1);
