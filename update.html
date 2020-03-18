@@ -39,8 +39,8 @@
     <!-- -->
     <div class="col-sm-5" style="background-color:lavender;">
         <label>Get manufacturer</label>
-        <input type="text" id="getMfrCall" name="getCall" placeholder="e.g. samsung">
-        <input type="button" id="getMfrCallBtn" value="GET" onclick="getManufacturerCall()">
+        <input type="text" id="getMfrCall" name="getMfrCall" placeholder="e.g. samsung">
+        <input type="button" id="getMfrCallBtn" value="GET" onclick="getMfrCall()">
         <input type="button" id="updateMfrBtn" value="UPDATE" onclick="updateManufacturer()">
     </div>
     <div class="col-sm-7" style="background-color:lavender;">
@@ -55,7 +55,7 @@
     <div class="col-sm-3" style="background-color:lavenderblush;">
         <form action="/api/v1/manufacturers/" method="post" target="hiddenFrame" id="postFormMfr">
             <label for="mfr">Manufacturer</label> <br>
-            <input type="text" id="trueMfr" name="mfr" value=""><br>
+            <input type="text" id="trueMfr" name="trueMfr" value=""><br>
         </form>
     </div>
     <div class="col-sm-9" style="background-color:lavenderblush;">
@@ -130,6 +130,27 @@
             j++;
         }
     }
+    function getMfrCall() {
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                let json = JSON.parse(xmlhttp.responseText);
+                if (json.length > 0){ // something found
+                    console.table(json);
+                    addTextToMfrField(json);
+                }
+                else {
+                    alert('No manufacturer found')
+                }
+            }
+        };
+        xmlhttp.open("GET", "/api/v1/" + document.getElementById('getMfrCall').value ,true);
+        xmlhttp.send();
+    }
+    function addTextToMfrField(json) {
+
+    }
+
 
 
 </script>
