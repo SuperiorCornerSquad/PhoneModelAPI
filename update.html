@@ -39,15 +39,15 @@
     <!-- -->
     <div class="col-sm-5" style="background-color:lavender;">
         <label>Get manufacturer</label>
-        <input type="text" id="getMfrCall" name="getCall" placeholder="e.g. samsung">
-        <input type="button" id="getMfrCallBtn" value="GET" onclick="getManufacturerCall()">
+        <input type="text" id="getMfrCall" name="getMfrCall" placeholder="e.g. samsung">
+        <input type="button" id="getMfrCallBtn" value="GET" onclick="getMfrCall()">
         <input type="button" id="updateMfrBtn" value="UPDATE" onclick="updateManufacturer()">
     </div>
     <div class="col-sm-7" style="background-color:lavender;">
         <label>Get phone</label>
         <input type="text" id="getCall" name="getCall" placeholder="e.g. samsung/1">
         <input type="button" id="getCallBtn" value="GET" onclick="getCall()">
-        <input type="button" id="updateBtn" value="UPDATE" onclick="updateProduce()">
+        <input type="button" id="updateBtn" value="UPDATE" onclick="updateProduct()">
     </div>
 
 
@@ -55,7 +55,7 @@
     <div class="col-sm-3" style="background-color:lavenderblush;">
         <form action="/api/v1/manufacturers/" method="post" target="hiddenFrame" id="postFormMfr">
             <label for="mfr">Manufacturer</label> <br>
-            <input type="text" id="trueMfr" name="mfr" value=""><br>
+            <input type="text" id="trueMfr" name="trueMfr" value=""><br>
         </form>
     </div>
     <div class="col-sm-9" style="background-color:lavenderblush;">
@@ -130,7 +130,46 @@
             j++;
         }
     }
+    function getMfrCall() {
+        let xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                let json = JSON.parse(xmlhttp.responseText);
+                if (json.length > 0){ // something found
+                    addTextToMfrField(json, document.getElementById('getMfrCall').value);
+                    //console.table(json);
+                }
+                else {
+                    alert('No manufacturer found')
+                }
+            }
+        };
+        xmlhttp.open("GET", "/api/v1/manufacturers",true);
+        xmlhttp.send();
+    }
 
+    /**
+     * Checks if the given mfr exists in the provided json. If so inserts the
+     * found string to the trueMFR field, else inserts 'Manufacturer not found'
+     * @param json
+     * @param mfr
+     */
+    function addTextToMfrField(json, mfr) {
+        let foundMFR = false;
+        let trueMfr = document.getElementById('trueMfr');
+        for(let i in json){
+            //if the mfr is found set values
+            if(json[i] === mfr){
+                trueMfr.value = json[i];
+                foundMFR = true;
+                break;
+            }
+        }
+        //if no mfr was found set value
+        if(!foundMFR){
+            trueMfr.value = "Manufacturer not found"
+        }
+    }
 
 </script>
 
